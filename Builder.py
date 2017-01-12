@@ -15,7 +15,7 @@ from jenkinsapi.jenkins import Jenkins
 from pydbus import SessionBus
 
 #import gitlab                   # Neet to test this
-from pytest import Config
+from Config import Config
 from TaskList import TaskList
 
 
@@ -34,7 +34,7 @@ class JenManager(Thread):
         self.name = name
         self.q = q
         self.config = Config()
-        self.login_data = self.config.get_login()
+        self.login_data = self.config.get_settings()
 
     def run(self):
         """Run builders."""
@@ -123,7 +123,7 @@ class JenManager(Thread):
 
             b = JenBulder(1, job_name, 1)
             b.set_login_data(
-                self.login_data['url'],
+                self.login_data['jenkins'],
                 self.login_data['username'],
                 self.login_data['password']
             )
