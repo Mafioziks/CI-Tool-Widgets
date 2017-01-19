@@ -8,7 +8,7 @@ class Config:
     """Configuration manager."""
 
     config_file = "/con.yml"
-    configurations = ""
+    # configurations = ""
 
     def read_config(self):
         """Read configurations from file."""
@@ -29,8 +29,11 @@ class Config:
 
         return None
 
-    def write_config(self, configs=configurations):
+    def write_config(self, configs=""):
         """Write configurations to file."""
+        if configs is None or len(configs) <= 0:
+            return
+
         try:
             f = open(
                 os.path.dirname(os.path.realpath(__file__)) +
@@ -54,11 +57,14 @@ class Config:
 
     def save_settings(self, settings={}):
         """Save settings."""
+        print(settings)
         conf = self.read_config()
         if conf is not None and 'settings' in conf.keys():
             conf['settings'].update(settings)
         else:
-            conf['settings'] = settings
+            if conf is None:
+                conf = dict()
+            conf.update({'settings': settings})
         self.write_config(conf)
 
     def add_preset(self, preset={}):
@@ -112,7 +118,7 @@ class Config:
 
     def __init__(self):
         """Initialize by reding file."""
-        self.configurations = self.read_config()
+        # self.configurations = self.read_config()
 
     def get_preset_list(self):
         """Get all preset name list."""

@@ -9,6 +9,7 @@ from Builder import JenManager
 from Settings import SettingsDialog
 from PresetManager import JenkinsPresets
 from BuildDialog import BuildDialog
+from LoginDialog import LoginDialog
 # My imports
 from Config import Config as Con      # New config class
 from TaskList import TaskList
@@ -39,6 +40,14 @@ class JiraHelper:
         if 'j' not in locals():
             con = Con()
             settings = con.get_settings()
+            if settings is None or 'jira' not in settings:
+                print(
+                    colored(
+                        '> Jira access not added!',
+                        'red'
+                    )
+                )
+                return None
             self.j = JIRA(
                 server=settings['jira'],
                 basic_auth=(settings['username'], settings['password'])
@@ -95,7 +104,7 @@ class JiraHelper:
 
     def create_menu(self):
         """Create menu."""
-        issues = self.get_my_tasks()
+        issues = self.get_my_tasks() or list()
         menu = Gtk.Menu()
         con = Con()
         settings = con.get_settings()
@@ -224,7 +233,7 @@ class JiraHelper:
         build.set_project(project, mr)
         build.show_all()
         response = build.run()
-        if response == Gtk.ResponseType.CANCEL:
+        if response != Gtk.ResponseType.OK:
             build.destroy()
             return
 
@@ -243,7 +252,10 @@ class JiraHelper:
         """Open Jira dashboard."""
         con = Con()
         settings = con.get_settings()
-        webbrowser.open(settings['jira'])
+        if settings is not None and 'jira' in settings:
+            webbrowser.open(settings['jira'])
+        else:
+            print(colored('> Jira not added', 'red'))
 
     def login(self):
         """Login to system."""
@@ -321,6 +333,25 @@ class JiraHelper:
 if __name__ == '__main__':
     print('JiraHelper - App started')
     print('------------------------')
+    con = Con()
+    configs = con.read_config()
+    if configs is None:
+        login = LoginDialog()
+        login.show_all()
+        response = login.run()
+
+        if response == Gtk.ResponseType.CANCEL:
+            exit
+
+        con.save_settings(
+            settings={
+                'username': login.get_username(),
+                'password': login.get_password()
+            }
+        )
+
+    del con
+
     jh = JiraHelper()
     jh.add_indicator()
     Gtk.main()
