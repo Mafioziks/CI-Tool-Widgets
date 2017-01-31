@@ -221,10 +221,11 @@ class JiraHelper:
             if len(re.findall('git', url)) <= 0:
                 continue
             url_parts = url.split('/')
-            urlList.append({
-                'mr': 'mr' + url_parts[len(url_parts)-1],
-                'project': url_parts[len(url_parts)-3]
-            })
+            if (re.match(r'^\d+$', url_parts[len(url_parts)-1])):
+                urlList.append({
+                    'mr': 'mr' + url_parts[len(url_parts)-1],
+                    'project': url_parts[len(url_parts)-3]
+                })
         return urlList
 
     def do_build(self, widget, project, mr, preset=''):

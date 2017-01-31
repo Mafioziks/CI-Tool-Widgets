@@ -206,7 +206,8 @@ class SettingsDialog (Gtk.Window):
                     """
                 )
             except Exception as e:
-                print('Error: ' + str(e.message))
+                if hasattr(e, 'message'):
+                    print('Error: ' + str(e.message))
                 self.set_style(
                     """
                     #txtJenkins {

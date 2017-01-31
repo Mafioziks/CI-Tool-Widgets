@@ -46,6 +46,10 @@ class BuildDialog (Gtk.Dialog):
         self.txt_receiver.set_name('def_receiver')
         self.content_area.pack_end(self.txt_receiver, False, True, 10)
 
+        self.lbl_receiver = Gtk.Label('Inform:')
+        self.lbl_receiver.set_name('def_lbl_receiver')
+        self.content_area.pack_end(self.lbl_receiver, False, True, 10)
+
         self.sep_hseparator = Gtk.HSeparator()
         self.sep_hseparator.set_name('def_separator')
         self.content_area.pack_end(self.sep_hseparator, False, True, 10)

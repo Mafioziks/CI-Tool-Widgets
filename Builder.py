@@ -93,7 +93,7 @@ class JenManager(Thread):
                     if (key != 'job' and
                             key != 'description' and
                             key != 'name' and
-                            key != 'recipient' and
+                            key != 'receiver' and
                             key != 'status' and
                             key != 'id'):
                         parameters.update({key: task[key]})
@@ -136,9 +136,12 @@ class JenManager(Thread):
             print(self.builders)
             b.start()
 
-        for b in self.builders:
-            if b.is_alive():
-                b.join()
+        while self.has_running_builders():
+            pass
+        # for b in self.builders:
+        #     if b.is_alive():
+        #         print("> " + str(b.getName()) + " | still running!")
+        #         # b.join()
 
         return
 
@@ -239,8 +242,8 @@ class JenBulder(Thread):
 
     def get_recepient(self):
         """Get recepient."""
-        if 'recepient' in self.task.get_task(self.task_id):
-            return str(self.task.get_task(self.task_id)['recepient'])
+        if 'receiver' in self.task.get_task(self.task_id):
+            return str(self.task.get_task(self.task_id)['receiver'])
         return None
 
     def get_target(self):
@@ -248,6 +251,11 @@ class JenBulder(Thread):
         task = self.task.get_task(self.task_id)
         if 'name' in task:
             return str(task['name'])
+        return str(task['url'] + ' / ' + task['tag'])
+
+    def get_target_simple(self):
+        """Get simple task description."""
+        task = self.task.get_task(self.task_id)
         return str(task['url'] + ' / ' + task['tag'])
 
     def run(self):
@@ -318,13 +326,16 @@ class JenBulder(Thread):
             print(str(self.qi.get_build().baseurl) + "/console")
             webbrowser.open(str(self.qi.get_build().baseurl) + "/console")
         else:
+            print(self.get_target())
             recepient = self.get_recepient()
             if recepient is not None:
                 self.send_msg(
                     recepient,
                     'Uzlikts: ' + self.get_target()
                 )
+                print(recepient + ' notified about finishing: ' + self.get_target())
                 self.remove_task()
+
         return
 
     def send_msg(self, recipient, message):

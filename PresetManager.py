@@ -25,6 +25,7 @@ class JenkinsPresets(Gtk.Window):
         # Add presset add page
         self.page_add_preset = Gtk.Box()
         self.page_add_preset.set_orientation(Gtk.Orientation.VERTICAL)
+        self.page_add_preset.set_spacing(16)
         self.page_layout.append_page(
             self.page_add_preset, Gtk.Label('Add Preset')
         )
@@ -66,6 +67,7 @@ class JenkinsPresets(Gtk.Window):
         # Page preset list
         self.page_preset_list = Gtk.Box()
         self.page_preset_list.set_orientation(Gtk.Orientation.VERTICAL)
+        self.page_preset_list.set_spacing(16)
         self.page_layout.append_page(
             self.page_preset_list, Gtk.Label('Manage presets')
         )
@@ -152,7 +154,6 @@ class JenkinsPresets(Gtk.Window):
         for child in self.page_add_preset.get_children():
             if (str(child.__class__.__name__) == 'Entry' or
                     str(child.__class__.__name__) == 'ComboBoxText'):
-                print(str(child.__class__.__name__) + ': ' + child.get_name())
                 if (child.get_name() == 'txtPresetName' or
                         child.get_name() == 'cmbJobs'):
                     continue
@@ -172,7 +173,7 @@ class JenkinsPresets(Gtk.Window):
         con = Con()
         con.add_preset(preset)
         self.update_preset_list()
-        print(preset)
+        self.show_all()
 
     def do_remove_preset(self, widget):
         """Remove selected preset."""

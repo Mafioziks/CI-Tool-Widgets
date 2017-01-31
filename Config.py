@@ -73,11 +73,8 @@ class Config:
         conf = self.read_config()
         if conf is not None and 'presets' in conf.keys():
             conf['presets'].update(preset)
-            print(preset)
         else:
             conf['presets'] = preset
-            print(preset)
-        print(conf)
         self.write_config(conf)
         print('preset added')
 
