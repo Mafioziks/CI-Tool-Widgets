@@ -86,9 +86,9 @@ class JiraHelper:
 
     def add_indicator(self, *args, **kwargs):
         """Add app indicator or update it."""
-        icon = "/jira_icon_25x25.png"
+        icon = "/res/img/icons/jira_icon_25x25.png"
         if test:
-            icon = "/jira_icon__test_25x25.png"
+            icon = "/res/img/icons/jira_icon__test_25x25.png"
 
         menu = self.create_menu()
         currpath = os.path.dirname(os.path.realpath(__file__))
@@ -116,7 +116,11 @@ class JiraHelper:
                 continue
 
             img = Gtk.Image()
-            img.set_from_file(os.path.dirname(os.path.realpath(__file__)) + '/' + str(issue.fields.priority) + '.png')
+            img.set_from_file(
+                os.path.dirname(os.path.realpath(__file__)) +
+                '/res/img/priority/' +
+                str(issue.fields.priority) + '.png'
+            )
 
             item = Gtk.ImageMenuItem(
                 '[' + str(issue) + '] (' +

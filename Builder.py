@@ -179,7 +179,7 @@ class JenBulder(Thread):
         self.name = name
         self.q = q
         currpath = os.path.dirname(os.path.realpath(__file__))
-        self.APP_ICON = currpath+"/Jenkins_logo.png"
+        self.APP_ICON = currpath+"/res/img/icons/Jenkins_logo.png"
         Notify.init('JenBuilder')
 
     def set_login_data(self, url, username, password):
@@ -333,7 +333,7 @@ class JenBulder(Thread):
                     'Uzlikts: ' + self.get_target()
                 )
                 print(recepient + ' notified about finishing: ' + self.get_target())
-        
+
         self.remove_task()
         return
 
