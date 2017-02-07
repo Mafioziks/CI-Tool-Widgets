@@ -76,7 +76,9 @@ class JiraHelper:
                 colored(
                     '[' + str(iss) + '] ' +
                     str(iss.fields.summary) + ' | ' +
-                    str(iss.fields.status),
+                    str(iss.fields.status) + ' (' +
+                    str(iss.fields.issuetype) + ' | ' +
+                    str(iss.fields.priority) + ')',
                     col
                 )
             )
@@ -112,11 +114,17 @@ class JiraHelper:
         for issue in issues:
             if str(issue.fields.status) == 'Closed':
                 continue
-            item = Gtk.MenuItem(
+
+            img = Gtk.Image()
+            img.set_from_file(os.path.dirname(os.path.realpath(__file__)) + '/' + str(issue.fields.priority) + '.png')
+
+            item = Gtk.ImageMenuItem(
                 '[' + str(issue) + '] (' +
                 str(issue.fields.status) + ') ' +
                 str(issue.fields.summary)
             )
+            item.set_image(img)
+
             submenu = Gtk.Menu()
 
             item_open = Gtk.MenuItem('Open in browser')

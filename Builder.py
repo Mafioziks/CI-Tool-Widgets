@@ -251,12 +251,12 @@ class JenBulder(Thread):
         task = self.task.get_task(self.task_id)
         if 'name' in task:
             return str(task['name'])
-        return str(task['url'] + ' / ' + task['tag'])
+        return str(task)
 
     def get_target_simple(self):
         """Get simple task description."""
         task = self.task.get_task(self.task_id)
-        return str(task['url'] + ' / ' + task['tag'])
+        return str(task['name'])
 
     def run(self):
         """Build task."""
@@ -320,7 +320,6 @@ class JenBulder(Thread):
             self.APP_ICON
         ).show()
         self.update_task('finished')
-        self.remove_task()
 
         if not self.qi.get_build().is_good():
             print(str(self.qi.get_build().baseurl) + "/console")
@@ -334,8 +333,8 @@ class JenBulder(Thread):
                     'Uzlikts: ' + self.get_target()
                 )
                 print(recepient + ' notified about finishing: ' + self.get_target())
-                self.remove_task()
-
+        
+        self.remove_task()
         return
 
     def send_msg(self, recipient, message):
