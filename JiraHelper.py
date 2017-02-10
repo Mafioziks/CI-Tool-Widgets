@@ -17,6 +17,7 @@ from GitExplorer import GitExplorer
 
 # Import JIRA
 from jira import JIRA
+from jira import exceptions as JiraExceptions
 
 # Import interface libraries
 import gi
@@ -48,10 +49,26 @@ class JiraHelper:
                     )
                 )
                 return None
-            self.j = JIRA(
-                server=settings['jira'],
-                basic_auth=(settings['username'], settings['password'])
-            )
+            try:
+                self.j = JIRA(
+                    server=settings['jira'],
+                    basic_auth=(settings['username'], settings['password'])
+                )
+            except JiraExceptions.JIRAError as ex:
+                if str(ex).find('HTTP 401'):
+                    print(
+                        colored(
+                            'Error > HTTP 401: ' +
+                            'Problem with Jira or wrong username/passowrd',
+                            'red'
+                        )
+                    )
+                else:
+                    print(colored(ex, 'red'))
+                sys.exit(0)
+            except Exception as eex:
+                print(colored(eex.message, 'red'))
+                sys.exit(0)
         print('Ticket owner: ' + str(self.j.current_user()))
         my_issues = self.j.search_issues(
             'assignee = ' + self.j.current_user(),
@@ -209,13 +226,21 @@ class JiraHelper:
     def do_issue_transition(self, widget, issue, transition_id, person=None):
         """Transit issue."""
         if person is None:
-            self.j.transition_issue(issue, str(transition_id))
+            try:
+                self.j.transition_issue(issue, str(transition_id))
+            except JiraExceptions.JIRAError as e:
+                print("JIRAError: " + str(e))
+            sys.exit(0)
         else:
-            self.j.transition_issue(
-                issue,
-                str(transition_id),
-                assignee={'name': person}
-            )
+            try:
+                self.j.transition_issue(
+                    issue,
+                    str(transition_id),
+                    assignee={'name': person}
+                )
+            except JiraExceptions.JIRAError as e:
+                print("JIRAError: " + str(e))
+            sys.exit(0)
         self.add_indicator()
 
     def get_git_links(self, issue):

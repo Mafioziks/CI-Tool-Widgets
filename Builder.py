@@ -200,7 +200,10 @@ class JenBulder(Thread):
             self.server = Jenkins(self.url, self.username, self.password)
             return True
         except Exception as ex:
-            print(colored(ex, 'red'))
+            if (str(ex.message).find('Invalid password/token for user')):
+                print(colored('Error > Invalid password/token', 'red'))
+            else:
+                print(colored(ex, 'red'))
         return False
 
     def get_job_parameters(self, jobName):
