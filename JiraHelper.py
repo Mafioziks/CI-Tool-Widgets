@@ -5,12 +5,12 @@ import re
 import sys
 import webbrowser
 from termcolor import colored
+# My imports
 from Builder import JenManager
 from Settings import SettingsDialog
 from PresetManager import JenkinsPresets
 from BuildDialog import BuildDialog
 from LoginDialog import LoginDialog
-# My imports
 from Config import Config as Con      # New config class
 from TaskList import TaskList
 from GitExplorer import GitExplorer
