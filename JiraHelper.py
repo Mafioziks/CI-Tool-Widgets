@@ -132,19 +132,26 @@ class JiraHelper:
             if str(issue.fields.status) == 'Closed':
                 continue
 
-            img = Gtk.Image()
-            img.set_from_file(
-                os.path.dirname(os.path.realpath(__file__)) +
-                '/res/img/priority/' +
-                str(issue.fields.priority) + '.png'
-            )
+            if str(issue.fields.priority) == "None":
+                item = Gtk.MenuItem(
+                    '[' + str(issue) + '] (' +
+                    str(issue.fields.status) + ') ' +
+                    str(issue.fields.summary)
+                )
+            else:
+                img = Gtk.Image()
+                img.set_from_file(
+                    os.path.dirname(os.path.realpath(__file__)) +
+                    '/res/img/priority/' +
+                    str(issue.fields.priority) + '.png'
+                )
 
-            item = Gtk.ImageMenuItem(
-                '[' + str(issue) + '] (' +
-                str(issue.fields.status) + ') ' +
-                str(issue.fields.summary)
-            )
-            item.set_image(img)
+                item = Gtk.ImageMenuItem(
+                    '[' + str(issue) + '] (' +
+                    str(issue.fields.status) + ') ' +
+                    str(issue.fields.summary)
+                )
+                item.set_image(img)
 
             submenu = Gtk.Menu()
 
@@ -230,7 +237,7 @@ class JiraHelper:
                 self.j.transition_issue(issue, str(transition_id))
             except JiraExceptions.JIRAError as e:
                 print("JIRAError: " + str(e))
-            sys.exit(0)
+                sys.exit(0)
         else:
             try:
                 self.j.transition_issue(
@@ -240,7 +247,7 @@ class JiraHelper:
                 )
             except JiraExceptions.JIRAError as e:
                 print("JIRAError: " + str(e))
-            sys.exit(0)
+                sys.exit(0)
         self.add_indicator()
 
     def get_git_links(self, issue):
